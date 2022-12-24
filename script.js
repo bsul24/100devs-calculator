@@ -7,7 +7,8 @@ const operatorBtns = document.querySelectorAll(".operator-btn");
 const output = document.querySelector(".output");
 
 // STATE
-let savedNum = undefined;
+let previousOperand = undefined;
+let currentOperand = undefined;
 let curOperator = undefined;
 let lastBtnPressed = undefined;
 
@@ -42,15 +43,28 @@ function handleOperator(e) {
     X: multiply,
     "/": divide,
   };
+  if (
+    previousOperand &&
+    lastBtnPressed !== "operator" &&
+    lastBtnPressed !== "equals"
+  ) {
+    output.textContent = String(
+      operate(previousOperand, output.textContent, curOperator)
+    ).slice(0, 10);
+  }
   curOperator = ops[e.target.textContent];
-  savedNum = output.textContent;
+  previousOperand = output.textContent;
   lastBtnPressed = "operator";
 }
 
 function handleEquals(e) {
   if (!curOperator) return;
 
-  output.textContent = operate(savedNum, output.textContent, curOperator);
+  operatorNum = output.textContent;
+  output.textContent = String(
+    operate(savedNum, output.textContent, curOperator)
+  ).slice(0, 10);
+  savedNum = output.textContent;
 }
 
 function operate(num1, num2, operator) {
